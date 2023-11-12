@@ -1,0 +1,154 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:k_focus/utils/int_extension.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  static const routeName = "/home";
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final pomodoroTime = 25 * 60;
+  var _time = "";
+  Timer? _timer;
+  PomodoroState _pomodoroState = PomodoroState.idle;
+
+  _HomePageState() {
+    _time = _formatTimeShow(pomodoroTime);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Container(
+            color: Colors.white,
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(Icons.task_rounded),
+                      Row(
+                        children: [
+                          Icon(Icons.data_object),
+                          Icon(Icons.settings)
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                Expanded(
+                    child: Center(
+                  child: Text(
+                    _time,
+                    style: const TextStyle(fontSize: 48, color: Colors.black),
+                  ),
+                )),
+                _operationByState(),
+                const SizedBox(
+                  height: 20,
+                )
+              ],
+            )));
+  }
+
+  Widget _operationByState() {
+    switch (_pomodoroState) {
+      case PomodoroState.complete:
+        return _operationStateComplete();
+      case PomodoroState.running:
+        return _operationStateRunning();
+      default:
+        return _operationStateIdle();
+    }
+  }
+
+  Widget _operationStateIdle() {
+    return ElevatedButton(
+        onPressed: () {
+          _start();
+        },
+        child: const Text("Start"));
+  }
+
+  Widget _operationStateRunning() {
+    return ElevatedButton(
+        onPressed: () {
+          _abort();
+        },
+        child: const Text("Abort"));
+  }
+
+  Widget _operationStateComplete() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ElevatedButton(
+            onPressed: () {
+              _start();
+            },
+            child: const Text("Start")),
+        const SizedBox(width: 20),
+        ElevatedButton(
+            onPressed: () {
+              _complete();
+            },
+            child: const Text("Complete"))
+      ],
+    );
+  }
+
+  /// Start the timer
+  void _start() {
+    _timer?.cancel();
+    setState(() {
+      _pomodoroState = PomodoroState.running;
+    });
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      int releaseTime = pomodoroTime - timer.tick;
+      setState(() {
+        if (releaseTime == 0) {
+          _timer?.cancel();
+          _pomodoroState = PomodoroState.complete;
+          releaseTime = pomodoroTime;
+        }
+        _time = _formatTimeShow(releaseTime);
+      });
+    });
+  }
+
+  /// Abort the timer
+  void _abort() {
+    _timer?.cancel();
+    setState(() {
+      _pomodoroState = PomodoroState.idle;
+      _time = _formatTimeShow(pomodoroTime);
+    });
+  }
+
+  String _formatTimeShow(int time) {
+    return "${(time ~/ 60).padZero()}:${(time % 60).padZero()}";
+  }
+
+  void _complete() {
+    // todo: mark this task as complete, and start next task
+  }
+}
+
+enum PomodoroState {
+  /// The timer is idle
+  idle,
+
+  /// The timer is running
+  running,
+
+  /// The timer is complete
+  complete
+}
