@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:k_focus/app/ui/pages/setting/setting_page.dart';
 import 'package:k_focus/utils/int_extension.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  static const routeName = "/home";
+  static const routeName = "/";
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -29,13 +31,15 @@ class _HomePageState extends State<HomePage> {
             color: Colors.white,
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(10),
+                Padding(
+                  padding: const EdgeInsets.all(10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(Icons.task_rounded),
-                      Row(
+                      IconButton(
+                          onPressed: () => context.go(SettingPage.routeName),
+                          icon: const Icon(Icons.task_rounded)),
+                      const Row(
                         children: [
                           Icon(Icons.data_object),
                           Icon(Icons.settings)
