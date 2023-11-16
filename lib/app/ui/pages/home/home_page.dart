@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:k_focus/app/ui/pages/chart/chart_page.dart';
 import 'package:k_focus/app/ui/pages/setting/setting_page.dart';
+import 'package:k_focus/app/ui/pages/task/task_list_page.dart';
 import 'package:k_focus/utils/int_extension.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,7 +28,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Material(
+        child: SafeArea(
         child: Container(
             color: Colors.white,
             child: Column(
@@ -37,12 +40,19 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                          onPressed: () => context.go(SettingPage.routeName),
-                          icon: const Icon(Icons.task_rounded)),
-                      const Row(
+                              onPressed: () =>
+                                  context.go("/${TaskListPage.routeName}"),
+                              icon: const Icon(Icons.format_list_bulleted)),
+                          Row(
                         children: [
-                          Icon(Icons.data_object),
-                          Icon(Icons.settings)
+                              IconButton(
+                                  onPressed: () =>
+                                      context.go("/${ChartPage.routeName}"),
+                                  icon: const Icon(Icons.bar_chart)),
+                              IconButton(
+                                  onPressed: () =>
+                                      context.go("/${SettingPage.routeName}"),
+                                  icon: const Icon(Icons.settings))
                         ],
                       )
                     ],
@@ -60,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                   height: 20,
                 )
               ],
-            )));
+                ))));
   }
 
   Widget _operationByState() {
