@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:k_focus/domain/entity/task_entity.dart';
+
+import 'add/task_add_modal.dart';
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({super.key});
@@ -13,9 +16,13 @@ class TaskListPage extends StatefulWidget {
 }
 
 class _TaskListPageState extends State<TaskListPage> {
+
+  var _taskList = <TaskEntity>[];
+
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return Scaffold(
+        body: Material(
       child: SafeArea(
           child: Column(
         children: [
@@ -26,6 +33,17 @@ class _TaskListPageState extends State<TaskListPage> {
                 },
                 icon: const Icon(Icons.arrow_back)),
             title: const Text("Task List"),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return const TaskAddModal();
+                        });
+                  },
+                  icon: const Icon(Icons.add))
+            ],
           ),
           Expanded(
             child: ListView.builder(
@@ -41,6 +59,8 @@ class _TaskListPageState extends State<TaskListPage> {
           ),
         ],
       )),
-    );
+    ));
   }
+
+  
 }

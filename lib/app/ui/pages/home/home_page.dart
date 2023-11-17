@@ -62,7 +62,10 @@ class _HomePageState extends State<HomePage> {
                     child: Center(
                   child: Text(
                     _time,
-                    style: const TextStyle(fontSize: 48, color: Colors.black),
+                        style: const TextStyle(
+                            fontSize: 48,
+                            fontFamily: "Courier",
+                            color: Colors.black),
                   ),
                 )),
                 _operationByState(),
@@ -85,7 +88,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _operationStateIdle() {
-    return ElevatedButton(
+    return FilledButton(
         onPressed: () {
           _start();
         },
@@ -93,7 +96,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _operationStateRunning() {
-    return ElevatedButton(
+    return FilledButton(
         onPressed: () {
           _abort();
         },
@@ -104,13 +107,13 @@ class _HomePageState extends State<HomePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ElevatedButton(
+        FilledButton(
             onPressed: () {
               _start();
             },
             child: const Text("Start")),
         const SizedBox(width: 20),
-        ElevatedButton(
+        FilledButton(
             onPressed: () {
               _complete();
             },
