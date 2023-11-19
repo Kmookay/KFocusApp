@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:k_focus/data/repository/local/task_local_repo.dart';
 import 'package:k_focus/domain/entity/task_entity.dart';
@@ -68,16 +69,27 @@ class _TaskListPageState extends State<TaskListPage> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: _taskList.length,
-              itemBuilder: (context, index) {
-                final task = _taskList[index];
-                return ListTile(
-                  title: Text("Task ${task.name}"),
-                  subtitle: Text("Description ${task.description}"),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                );
-              },
-            ),
+                itemCount: _taskList.length,
+                itemBuilder: (context, index) {
+                  final task = _taskList[index];
+                  return Dismissible(
+                      key: Key(task.name),
+                      onDismissed: (direction) {
+                        localRepo.deleteTask(task).then((value) {
+                          Fluttertoast.showToast(
+                              msg: "Task ${task.description} deleted");
+                        });
+                      },
+                      background: Container(
+                        color: Colors.red,
+                        child: const Icon(Icons.delete),
+                      ),
+                      child: ListTile(
+                        title: Text("Task ${task.name}"),
+                        subtitle: Text("Description ${task.description}"),
+                        trailing: const Icon(Icons.arrow_forward_ios),
+                      ));
+                }),
           ),
         ],
       )),

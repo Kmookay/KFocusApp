@@ -29,14 +29,20 @@ class TaskLocalRepo {
     return await _db.into(_db.tTask).insert(taskCompanion);
   }
 
+  Future<int> deleteTask(TaskEntity task) async {
+    return (_db.delete(_db.tTask)..where((t) => t.id.equals(task.id))).go();
+  }
+
   Stream<List<TaskEntity>> taskList() {
     return _db.select(_db.tTask).watch().map((event) {
       return event.map((e) {
-        return TaskEntity(
+        TaskEntity task = TaskEntity(
             name: e.title,
             description: e.description,
             dueDate: e.dueDate,
             isCompleted: e.isDone);
+        task.id = e.id;
+        return task;
       }).toList();
     });
   }

@@ -1,4 +1,5 @@
 class TaskEntity {
+  late int id;
   final String name;
   final String description;
   final DateTime dueDate;
