@@ -10,6 +10,14 @@ import '../../db/kfocus_db.dart';
 class TaskLocalRepo {
   final _db = KFocusDB();
 
+  static final TaskLocalRepo _singleton = TaskLocalRepo._internal();
+
+  factory TaskLocalRepo() {
+    return _singleton;
+  }
+
+  TaskLocalRepo._internal();
+
   Future<int> insertTask(TaskEntity task) async {
     final taskCompanion = TTaskCompanion.insert(
         title: task.name,
@@ -21,15 +29,15 @@ class TaskLocalRepo {
     return await _db.into(_db.tTask).insert(taskCompanion);
   }
 
-  Stream<List<TaskEntity>> taskList() async* {
-    final query = _db.select(_db.tTask);
-    final taskList = await query.get();
-    yield taskList
-        .map((task) => TaskEntity(
-            name: task.title,
-            description: task.description,
-            dueDate: task.dueDate,
-            isCompleted: task.isDone))
-        .toList();
+  Stream<List<TaskEntity>> taskList() {
+    return _db.select(_db.tTask).watch().map((event) {
+      return event.map((e) {
+        return TaskEntity(
+            name: e.title,
+            description: e.description,
+            dueDate: e.dueDate,
+            isCompleted: e.isDone);
+      }).toList();
+    });
   }
 }
