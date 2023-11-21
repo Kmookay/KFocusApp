@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:k_focus/app/ui/pages/chart/chart_page.dart';
-import 'package:k_focus/app/ui/pages/setting/setting_page.dart';
 import 'package:k_focus/app/ui/pages/task/task_list_page.dart';
+import 'package:k_focus/app/ui/widgets/pomodoro_progress.dart';
 import 'package:k_focus/utils/int_extension.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,49 +29,52 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Material(
         child: SafeArea(
-        child: Container(
-            color: Colors.white,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                              onPressed: () =>
-                                  context.go("/${TaskListPage.routeName}"),
-                              icon: const Icon(Icons.format_list_bulleted)),
-                          Row(
+            child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                                onPressed: () => {
+                                      // todo: show today task list
+                                    },
+                                icon: const Icon(Icons.format_list_bulleted)),
+                            IconButton(
+                                onPressed: () => _reset(),
+                                icon: const Icon(Icons.restore))
+                          ],
+                        )),
+                    Expanded(
+                        child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                              IconButton(
-                                  onPressed: () =>
-                                      context.go("/${ChartPage.routeName}"),
-                                  icon: const Icon(Icons.bar_chart)),
-                              IconButton(
-                                  onPressed: () =>
-                                      context.go("/${SettingPage.routeName}"),
-                                  icon: const Icon(Icons.settings))
+                          Text(
+                            _time,
+                            style: const TextStyle(
+                                fontSize: 48,
+                                fontFamily: "Courier",
+                                color: Colors.black),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          PomodoroProgress(pomodoroCount: 4),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          _operationByState(),
                         ],
-                      )
-                    ],
-                  ),
-                ),
-                Expanded(
-                    child: Center(
-                  child: Text(
-                    _time,
-                        style: const TextStyle(
-                            fontSize: 48,
-                            fontFamily: "Courier",
-                            color: Colors.black),
-                  ),
-                )),
-                _operationByState(),
-                const SizedBox(
-                  height: 20,
-                )
-              ],
+                      ),
+                    )),
+                    const SizedBox(
+                      height: 20,
+                    )
+                  ],
                 ))));
   }
 
@@ -120,6 +122,11 @@ class _HomePageState extends State<HomePage> {
             child: const Text("Complete"))
       ],
     );
+  }
+
+  /// Reset the timer
+  void _reset() {
+    _abort();
   }
 
   /// Start the timer
