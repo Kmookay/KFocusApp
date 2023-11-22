@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:k_focus/app/ui/pages/task/task_list_page.dart';
 import 'package:k_focus/app/ui/widgets/pomodoro_progress.dart';
 import 'package:k_focus/utils/int_extension.dart';
 
@@ -16,10 +14,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final pomodoroTime = 25 * 60;
+  final pomodoroTime = 1 * 60;
   var _time = "";
   Timer? _timer;
   PomodoroState _pomodoroState = PomodoroState.idle;
+
+  final GlobalKey<PomodoroProgressState> pomodoroProgressKey =
+      GlobalKey<PomodoroProgressState>();
 
   _HomePageState() {
     _time = _formatTimeShow(pomodoroTime);
@@ -63,7 +64,8 @@ class _HomePageState extends State<HomePage> {
                           const SizedBox(
                             height: 20,
                           ),
-                          PomodoroProgress(pomodoroCount: 4),
+                          PomodoroProgress(
+                              key: pomodoroProgressKey, pomodoroCount: 4),
                           const SizedBox(
                             height: 30,
                           ),
@@ -127,6 +129,7 @@ class _HomePageState extends State<HomePage> {
   /// Reset the timer
   void _reset() {
     _abort();
+    pomodoroProgressKey.currentState?.reset();
   }
 
   /// Start the timer
@@ -135,6 +138,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _pomodoroState = PomodoroState.running;
     });
+    pomodoroProgressKey.currentState?.start();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       int releaseTime = pomodoroTime - timer.tick;
       setState(() {
@@ -142,6 +146,7 @@ class _HomePageState extends State<HomePage> {
           _timer?.cancel();
           _pomodoroState = PomodoroState.complete;
           releaseTime = pomodoroTime;
+          pomodoroProgressKey.currentState?.complete();
         }
         _time = _formatTimeShow(releaseTime);
       });
@@ -151,6 +156,7 @@ class _HomePageState extends State<HomePage> {
   /// Abort the timer
   void _abort() {
     _timer?.cancel();
+    pomodoroProgressKey.currentState?.abort();
     setState(() {
       _pomodoroState = PomodoroState.idle;
       _time = _formatTimeShow(pomodoroTime);
