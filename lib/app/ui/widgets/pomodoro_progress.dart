@@ -26,10 +26,15 @@ class PomodoroProgressState extends State<PomodoroProgress> {
   Widget _progress() {
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: List<Widget>.generate(widget.pomodoroCount, (int index) {
-          if (index < currentPomodoro) {
+        children:
+            List<Widget>.generate(widget.pomodoroCount * 2 - 1, (int index) {
+          if (index % 2 == 1) {
+            return const SizedBox(width: 10);
+          }
+          final pomodoroIndex = index ~/ 2;
+          if (pomodoroIndex < currentPomodoro) {
             return _item(PomodoroItemState.complete);
-          } else if (index == currentPomodoro) {
+          } else if (pomodoroIndex == currentPomodoro) {
             switch (state) {
               case PomodoroItemState.complete:
                 return _item(PomodoroItemState.complete);
