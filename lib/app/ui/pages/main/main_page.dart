@@ -16,6 +16,13 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _currentTabIndex = 1;
+  final PageController _pageController = PageController(initialPage: 1);
+
+  static const List<Widget> _pages = <Widget>[
+    TaskListPage(),
+    HomePage(),
+    SettingPage()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +35,15 @@ class _MainPageState extends State<MainPage> {
           ],
           selectedIndex: _currentTabIndex,
           onDestinationSelected: (int index) {
+            _pageController.jumpToPage(index);
             setState(() {
               _currentTabIndex = index;
             });
           },
         ),
-        body: const <Widget>[
-          TaskListPage(),
-          HomePage(),
-          SettingPage()
-        ][_currentTabIndex]);
+        body: PageView(
+          controller: _pageController,
+          children: _pages,
+        ));
   }
 }

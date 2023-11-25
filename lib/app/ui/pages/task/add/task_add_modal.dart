@@ -58,6 +58,7 @@ class _TaskAddModalState extends State<TaskAddModal> {
         .insertTask(TaskEntity(
             name: "test",
             description: _taskController.text,
+            pomodoroCount: 1,
             dueDate: DateTime.now(),
             isCompleted: false))
         .then((value) {

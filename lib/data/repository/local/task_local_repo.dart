@@ -39,6 +39,7 @@ class TaskLocalRepo {
         TaskEntity task = TaskEntity(
             name: e.title,
             description: e.description,
+            pomodoroCount: 1,
             dueDate: e.dueDate,
             isCompleted: e.isDone);
         task.id = e.id;
