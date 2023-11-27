@@ -20,9 +20,11 @@ class TaskLocalRepo {
 
   Future<int> insertTask(TaskEntity task) async {
     final taskCompanion = TTaskCompanion.insert(
-        title: task.name,
-        description: task.description,
-        dueDate: task.dueDate,
+        title: task.title,
+        note: Value(task.note),
+        pomodoroCount: Value(task.pomodoroCount),
+        startTime: Value(task.startTime),
+        dueTime: Value(task.dueTime),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         isDone: Value(task.isCompleted));
@@ -37,10 +39,11 @@ class TaskLocalRepo {
     return _db.select(_db.tTask).watch().map((event) {
       return event.map((e) {
         TaskEntity task = TaskEntity(
-            name: e.title,
-            description: e.description,
+            title: e.title,
+            note: e.note,
             pomodoroCount: 1,
-            dueDate: e.dueDate,
+            startTime: e.startTime,
+            dueTime: e.dueTime,
             isCompleted: e.isDone);
         task.id = e.id;
         return task;

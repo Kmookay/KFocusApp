@@ -67,12 +67,13 @@ class _TaskListPageState extends State<TaskListPage> {
                 itemCount: _taskList.length,
                 itemBuilder: (context, index) {
                   final task = _taskList[index];
-                  return Dismissible(
-                      key: Key(task.name),
+                    return Card(
+                      child: Dismissible(
+                          key: Key(task.title),
                       onDismissed: (direction) {
                         localRepo.deleteTask(task).then((value) {
                           Fluttertoast.showToast(
-                              msg: "Task ${task.description} deleted");
+                                  msg: "Task ${task.title} deleted");
                         });
                       },
                       background: Container(
@@ -80,13 +81,15 @@ class _TaskListPageState extends State<TaskListPage> {
                         child: const Icon(Icons.delete),
                       ),
                       child: ListTile(
-                        title: Text("Task ${task.name}"),
-                        subtitle: Text("Description ${task.description}"),
+                            title: Text("Task ${task.title}"),
+                            subtitle: Text("Description ${task.note}"),
                         trailing: IconButton(
                             onPressed: () {},
                             icon: const Icon(Icons.play_arrow)),
-                      ));
-                }),
+                          )),
+                    );
+                  })
+
           ),
         ],
       )),

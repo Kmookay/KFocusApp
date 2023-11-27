@@ -22,10 +22,10 @@ class _HomePageState extends State<HomePage>
   Timer? _timer;
   PomodoroState _pomodoroState = PomodoroState.idle;
   TaskEntity? _currentTask = TaskEntity(
-      name: "test",
-      description: "Today task",
+      title: "Today task",
+      note: "Today task note",
       pomodoroCount: 2,
-      dueDate: DateTime.now(),
+      dueTime: DateTime.now(),
       isCompleted: false);
 
   final GlobalKey<PomodoroProgressState> pomodoroProgressKey =
@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    _currentTask!.description,
+                    _currentTask!.title,
                     style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(

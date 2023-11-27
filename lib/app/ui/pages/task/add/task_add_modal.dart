@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:k_focus/app/ui/widgets/time_select_item.dart';
 import 'package:k_focus/data/repository/local/task_local_repo.dart';
 import 'package:k_focus/domain/entity/task_entity.dart';
+import 'package:k_focus/utils/logger.dart';
 
 /// TaskAddModal
 ///
@@ -18,9 +19,9 @@ class TaskAddModal extends StatefulWidget {
 }
 
 class _TaskAddModalState extends State<TaskAddModal> {
-  int porodomoCount = 1;
   final _taskController = TextEditingController();
   final _pomodoroCountInputController = TextEditingController(text: '1');
+  DateTime? _startTime, _dueTime;
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +72,17 @@ class _TaskAddModalState extends State<TaskAddModal> {
             ],
           ),
           const Divider(color: Colors.grey, height: 0.5),
-          TimeSelectItem(label: "Start Date", onTimeSelected: (time) {}),
+          TimeSelectItem(
+              label: "Start Date",
+              onTimeSelected: (time) {
+                _startTime = time;
+              }),
           const Divider(color: Colors.grey, height: 0.5),
-          TimeSelectItem(label: "Due Date", onTimeSelected: (time) {}),
+          TimeSelectItem(
+              label: "Due Date",
+              onTimeSelected: (time) {
+                _dueTime = time;
+              }),
           const Divider(color: Colors.grey, height: 0.5),
           const Spacer(),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -100,18 +109,19 @@ class _TaskAddModalState extends State<TaskAddModal> {
   }
 
   void _removePomodoro() {
-    if (porodomoCount > 1) {
+    int pomodoroCount = int.parse(_pomodoroCountInputController.text);
+    if (pomodoroCount > 1) {
       setState(() {
-        porodomoCount--;
-        _pomodoroCountInputController.text = porodomoCount.toString();
+        _pomodoroCountInputController.text = (++pomodoroCount).toString();
       });
     }
   }
 
   void _addPomodoro() {
+    int pomodoroCount = int.parse(_pomodoroCountInputController.text);
     setState(() {
-      porodomoCount++;
-      _pomodoroCountInputController.text = porodomoCount.toString();
+      pomodoroCount++;
+      _pomodoroCountInputController.text = pomodoroCount.toString();
     });
   }
 
@@ -124,15 +134,16 @@ class _TaskAddModalState extends State<TaskAddModal> {
     final localRepo = TaskLocalRepo();
     localRepo
         .insertTask(TaskEntity(
-            name: "test",
-            description: _taskController.text,
+            title: _taskController.text,
+            startTime: _startTime,
+            dueTime: _dueTime,
             pomodoroCount: 1,
-            dueDate: DateTime.now(),
             isCompleted: false))
         .then((value) {
       Fluttertoast.showToast(msg: "Task ${_taskController.text} added");
       Navigator.pop(context);
     }).catchError((error) {
+      KLogger.e(error.toString());
       Fluttertoast.showToast(msg: error.toString());
     });
   }

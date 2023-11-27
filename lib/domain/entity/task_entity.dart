@@ -1,16 +1,18 @@
 class TaskEntity {
   late int id;
-  final String name;
-  final String description;
+  final String title;
+  String? note;
   final int pomodoroCount;
-  final DateTime dueDate;
+  DateTime? startTime;
+  DateTime? dueTime;
   final bool isCompleted;
   int completedPomodoroCount = 0;
 
   TaskEntity(
-      {required this.name,
-      required this.description,
+      {required this.title,
       required this.pomodoroCount,
-      required this.dueDate,
-      required this.isCompleted});
+      required this.isCompleted,
+      this.startTime,
+      this.dueTime,
+      this.note});
 }
