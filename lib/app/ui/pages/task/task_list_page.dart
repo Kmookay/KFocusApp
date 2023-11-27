@@ -63,12 +63,13 @@ class _TaskListPageState extends State<TaskListPage> {
             ],
           ),
           Expanded(
+              child: Padding(
+            padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
             child: ListView.builder(
                 itemCount: _taskList.length,
                 itemBuilder: (context, index) {
                   final task = _taskList[index];
-                    return Card(
-                      child: Dismissible(
+                  return Dismissible(
                           key: Key(task.title),
                       onDismissed: (direction) {
                         localRepo.deleteTask(task).then((value) {
@@ -80,16 +81,46 @@ class _TaskListPageState extends State<TaskListPage> {
                         color: Colors.red,
                         child: const Icon(Icons.delete),
                       ),
-                      child: ListTile(
-                            title: Text("Task ${task.title}"),
-                            subtitle: Text("Description ${task.note}"),
-                        trailing: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.play_arrow)),
-                          )),
+                    child: Card(
+                        child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(task.title,
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16)),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Icons.timer,
+                                            size: 15,
+                                          ),
+                                          Text(task.pomodoroCount.toString()),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.play_arrow))
+                              ],
+                            ))),
                     );
                   })
-
+            ,
+          )
           ),
         ],
       )),
