@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:go_router/go_router.dart';
 import 'package:k_focus/data/repository/local/task_local_repo.dart';
 import 'package:k_focus/domain/entity/task_entity.dart';
 
@@ -49,17 +48,13 @@ class _TaskListPageState extends State<TaskListPage> {
           child: Column(
         children: [
           AppBar(
-            leading: IconButton(
-                onPressed: () {
-                  context.pop();
-                },
-                icon: const Icon(Icons.arrow_back)),
             title: const Text("Task List"),
             actions: [
               IconButton(
                   onPressed: () {
                     showModalBottomSheet(
                         context: context,
+                        isScrollControlled: true,
                         builder: (context) {
                           return const TaskAddModal();
                         });
@@ -87,7 +82,9 @@ class _TaskListPageState extends State<TaskListPage> {
                       child: ListTile(
                         title: Text("Task ${task.name}"),
                         subtitle: Text("Description ${task.description}"),
-                        trailing: const Icon(Icons.arrow_forward_ios),
+                        trailing: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.play_arrow)),
                       ));
                 }),
           ),
