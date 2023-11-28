@@ -41,7 +41,7 @@ class TaskLocalRepo {
         TaskEntity task = TaskEntity(
             title: e.title,
             note: e.note,
-            pomodoroCount: 1,
+            pomodoroCount: e.pomodoroCount,
             startTime: e.startTime,
             dueTime: e.dueTime,
             isCompleted: e.isDone);

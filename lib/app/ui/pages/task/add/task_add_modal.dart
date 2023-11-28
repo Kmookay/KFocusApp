@@ -137,7 +137,7 @@ class _TaskAddModalState extends State<TaskAddModal> {
             title: _taskController.text,
             startTime: _startTime,
             dueTime: _dueTime,
-            pomodoroCount: 1,
+            pomodoroCount: int.parse(_pomodoroCountInputController.text),
             isCompleted: false))
         .then((value) {
       Fluttertoast.showToast(msg: "Task ${_taskController.text} added");
